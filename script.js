@@ -1,4 +1,4 @@
-/* ***CONSTANTS *** */
+// CONSTANTS
 const container = document.getElementById('sketch-container');
 const clear = document.getElementById('clear');
 const number = document.getElementById('number');
@@ -9,7 +9,7 @@ const eraser = document.getElementById('eraser');
 const length = document.getElementById('length');
 const colors = ['rgb(255, 0, 24)', 'rgb(255, 165, 44)', 'rgb(255, 255, 65)', 'rgb(0, 128, 24)', 'rgb(0, 0, 249)', 'rgb(134, 0, 125)'];
 
-/* ***VARIABLES*** */
+// VARIABLES
 let eraseMode = false;
 let rainbowMode = false;
 let isDragging = false;
@@ -17,11 +17,13 @@ let sizeConstant = 35;
 let timer = 0;
 let divArr = [];
 
-/* ***FUCNTIONS*** */
+// FUNCTIONS
+// returns a random rgb color
 function randColor() {
     return `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
 }
 
+// creates an empty board of specified size
 function createBoard(size) {
     divArr = [];
     container.innerHTML = '';
@@ -31,7 +33,7 @@ function createBoard(size) {
         container.appendChild(subcontainer);
         for (j = 0; j < size; j++) {
             const div = document.createElement('div');
-            div.setAttribute('style', `background: white; height: ${sizeConstant/size}rem; width: ${sizeConstant/size}rem; border: 0.1rem solid black; box-sizing: border-box;`);
+            div.setAttribute('style', `background: white; height: ${sizeConstant / size}rem; width: ${sizeConstant / size}rem; border: 0.1rem solid black; box-sizing: border-box;`);
             div.className = 'box';
             subcontainer.appendChild(div);
             divArr.push(div);
@@ -39,11 +41,12 @@ function createBoard(size) {
     }
 }
 
+// allows board to be colored
 function color() {
     let currDiv = divArr[0];
 
     divArr.forEach((e) => {
-        e.addEventListener('mousedown', () => {    
+        e.addEventListener('mousedown', () => {
             isDragging = true;
             currDiv = e;
 
@@ -51,26 +54,27 @@ function color() {
                 e.style.background = 'white';
             } else if (rainbowMode) {
                 e.style.background = randColor();
-            }  else {
+            } else {
                 e.style.background = colorWheel.value;
             }
         });
 
         e.addEventListener('mousemove', () => {
-                if (isDragging && e != currDiv) {
-                    if (eraseMode) {
-                        e.style.background = 'white';
-                    } else if (rainbowMode) {
-                        e.style.background = randColor();
-                    }  else {
-                        e.style.background = colorWheel.value;
-                    }
-                    currDiv = e;
+            if (isDragging && e != currDiv) {
+                if (eraseMode) {
+                    e.style.background = 'white';
+                } else if (rainbowMode) {
+                    e.style.background = randColor();
+                } else {
+                    e.style.background = colorWheel.value;
                 }
+                currDiv = e;
+            }
         });
     });
 }
 
+// updates the max size of board depending on screen size
 function updateSizeConstant() {
     if (window.innerWidth <= 600) {
         sizeConstant = 17;
@@ -84,15 +88,16 @@ function updateSizeConstant() {
     }
 }
 
+// rainbow cycling animation
 function rainbowCycle() {
     rainbow.style.background = randColor();
-	timer = setTimeout(function() {
-		rainbowCycle();
-	}, 350);
+    timer = setTimeout(function () {
+        rainbowCycle();
+    }, 350);
 }
 
 
-/* ***EVENT LISTENERS*** */
+// EVENT LISTENERS
 document.addEventListener('mouseup', () => {
     isDragging = false;
 });
@@ -101,13 +106,13 @@ window.addEventListener('resize', () => {
     updateSizeConstant();
     const boxes = document.getElementsByClassName('box');
     for (i = 0; i < boxes.length; i++) {
-        boxes[i].style.height = `${sizeConstant/number.value}rem`;
-        boxes[i].style.width = `${sizeConstant/number.value}rem`;
+        boxes[i].style.height = `${sizeConstant / number.value}rem`;
+        boxes[i].style.width = `${sizeConstant / number.value}rem`;
     }
 })
 
 number.addEventListener('input', () => {
-    length.textContent=`${number.value} x ${number.value}`;
+    length.textContent = `${number.value} x ${number.value}`;
     createBoard(number.value);
     color();
 });
@@ -144,7 +149,7 @@ eraser.addEventListener('click', () => {
     eraseMode = true;
 });
 
-/* ***START CONDITION*** */
+// START CONDITIONS
 updateSizeConstant();
 createBoard(number.value);
 color();
